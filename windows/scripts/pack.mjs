@@ -1,14 +1,19 @@
 // Copies the packages Tauri buries in target/release/bundle/ into
-// windows/release/, with the names they ship under. Used by `npm run pack` and
-// by the release workflows, so both produce exactly the same file names.
+// OS-specific release paths (linux/release/ for Linux, windows/release/ for Windows).
+// Used by `npm run pack` and by the release workflows.
 
 import { readFileSync, mkdirSync, copyFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const repoRoot = resolve(root, "..");
 const bundleRoot = join(root, "target", "release", "bundle");
-const outDir = join(root, "release");
+
+// Target directories separated by OS
+const outDirs = process.platform === "linux"
+  ? [join(repoRoot, "linux", "release"), join(root, "release")]
+  : [join(root, "release")];
 
 const { version } = JSON.parse(readFileSync(join(root, "src-tauri", "tauri.conf.json"), "utf8"));
 
@@ -61,7 +66,9 @@ function newest(dir, suffix) {
     .sort((a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs)[0];
 }
 
-mkdirSync(outDir, { recursive: true });
+for (const dir of outDirs) {
+  mkdirSync(dir, { recursive: true });
+}
 const written = [];
 for (const { dir, suffix, names } of packages) {
   const built = newest(join(bundleRoot, dir), suffix);
@@ -70,9 +77,11 @@ for (const { dir, suffix, names } of packages) {
     process.exit(1);
   }
   for (const name of names) {
-    const dest = join(outDir, name);
-    copyFileSync(built, dest);
-    written.push(dest);
+    for (const targetDir of outDirs) {
+      const dest = join(targetDir, name);
+      copyFileSync(built, dest);
+      written.push(dest);
+    }
   }
 }
 

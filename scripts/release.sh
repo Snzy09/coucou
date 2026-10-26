@@ -12,7 +12,7 @@ set -euo pipefail
 VERSION="${1:?Usage: $0 <version> [--finish]}"
 MODE="${2:-}"
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-BUILD_DIR="/tmp/coucou-release-$VERSION"
+BUILD_DIR="$REPO_ROOT/NotchBuddy/release"
 APP="$BUILD_DIR/Coucou.app"
 ZIP="$BUILD_DIR/Coucou.zip"
 COMMIT_FILE="$BUILD_DIR/commit"

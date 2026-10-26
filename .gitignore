@@ -1,5 +1,10 @@
 # Build artefacts
 NotchBuddy/build/
+NotchBuddy/release/
+linux/release/
+windows/release/
+android/release/
+release/
 NotchBuddy/NotchBuddy.xcodeproj/project.xcworkspace/xcuserdata/
 NotchBuddy/NotchBuddy.xcodeproj/xcuserdata/
 NotchBuddy/NotchBuddy.xcodeproj/xcshareddata/

@@ -26,3 +26,12 @@ Whenever adding a new feature or making an update, **all platforms must be synch
 - Tauri 2 + Rust + Vite for Windows & Linux.
 - Secrets stay in OS Keychains (macOS Keychain, Windows Credential Manager, Linux Secret Service), never in plain text or git.
 - Zero telemetry and non-blocking hook relays.
+
+### 4. OS-Specific Release Paths
+Every platform build and release script must output packaged release artifacts into its dedicated directory:
+- **macOS**: `NotchBuddy/release/` (`Coucou.app`, `Coucou.zip`)
+- **iOS**: `NotchBuddy/release/ios/`
+- **Linux**: `linux/release/` (`Coucou-Linux-*.AppImage`, `Coucou-Linux-*.deb`, `Coucou-Linux-*.rpm`, `SHA256SUMS`)
+- **Windows**: `windows/release/` (`Coucou-Windows-*-setup.exe`, `Coucou-Windows-*.msi`)
+- **Android**: `android/release/` (`Coucou-Android-*.apk`, `SHA256SUMS`)
+All release output directories are excluded from git tracking in `.gitignore`.
